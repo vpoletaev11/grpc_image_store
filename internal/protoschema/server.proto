@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+option go_package = "grpc_file_storage/internal/protoschema";
+
+service Server {
+    rpc UploadImage (stream UploadImageRequest) returns (UploadImageResponse) {};
+    rpc DownloadImage (DownloadImageRequest) returns (stream DownloadImageResponse) {};
+    rpc ImageInfoList (ImageInfoListRequest) returns (stream ImageInfoListResponse) {};
+  }
+  
+  // Upload
+  message UploadImageRequest {
+    oneof data {
+      ImageInfo info = 1;
+      bytes chunk_data = 2;
+    };
+  }
+  
+  message ImageInfo {
+    string filename = 1;
+  }
+
+  message UploadImageResponse {
+  }
+
+  // Download
+  message DownloadImageRequest {
+    string filename = 1;
+  }
+
+  message DownloadImageResponse {
+    bytes chunk_data = 1;
+  }
+
+  // Image Info
+  message ImageInfoListRequest {
+  }
+
+  message ImageInfoListResponse {
+    string filename = 1;
+    int64 created_at = 2;
+    int64 modified_at = 3;
+  }
