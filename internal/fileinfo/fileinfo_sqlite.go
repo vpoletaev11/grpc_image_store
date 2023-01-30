@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 const (
@@ -39,16 +41,13 @@ func NewFileInfoStorageSqlite(ctx context.Context, db *sqlx.DB) (*FileInfoStorag
 }
 
 func (f *FileInfoStorageSqlite) IsFileExists(ctx context.Context, fileName string) (bool, error) {
-	cnt := 0
-	err := f.db.GetContext(ctx, &cnt, getFileCount, fileName)
+	count := 0
+	err := f.db.GetContext(ctx, &count, getFileCount, fileName)
 	if err != nil {
 		return false, fmt.Errorf("get file count error: %w", err)
 	}
-	if cnt < 0 || cnt > 1 {
-		return false, fmt.Errorf("get file count error: 'incorrect count of files [%d], expected 0 or 1'", cnt)
-	}
 
-	if cnt == 1 {
+	if count == 1 {
 		return true, nil
 	}
 	return false, nil
@@ -88,6 +87,7 @@ func (f *FileInfoStorageSqlite) ListFileInfo(ctx context.Context) ([]FileInfo, e
 	if err != nil {
 		return nil, fmt.Errorf("select file info list: %w", err)
 	}
+	defer rows.Close()
 
 	fileInfo := FileInfo{}
 	var createdAt, modifiedAt int64
