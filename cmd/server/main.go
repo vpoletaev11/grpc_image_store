@@ -23,6 +23,8 @@ const (
 )
 
 func main() {
+	// TODO: add docker-compose.
+	// TODO: add README and comments.
 	// TODO: add logging.
 	// TODO: add graceful shutdown (and correct operations cancellations).
 	// TODO: prevent more than one upload operation with the same file name at the same time.

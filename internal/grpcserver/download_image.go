@@ -35,7 +35,7 @@ func (g *GRPCServer) DownloadImage(req *protoschema.DownloadImageRequest, resp p
 			if err == io.EOF {
 				return nil
 			}
-			return status.Errorf(codes.Unknown, "send download image response error: %q", err.Error())
+			return status.Errorf(codes.Unknown, "read file to chunk error: %q", err.Error())
 		}
 		if n < 1024 {
 			chunk = chunk[:n]
