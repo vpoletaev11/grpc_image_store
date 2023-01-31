@@ -6,7 +6,7 @@ import (
 )
 
 type FileInfoStorage interface {
-	IsFileExists(ctx context.Context, fileName string) bool
+	IsFileExists(ctx context.Context, fileName string) (bool, error)
 	InsertFileInfo(ctx context.Context, fileName string, currentTime time.Time) error
 	UpdateFileModifiedAt(ctx context.Context, fileName string, currentTime time.Time) error
 	// TODO: add pagination (if count of files would be appropriate for this solution)
