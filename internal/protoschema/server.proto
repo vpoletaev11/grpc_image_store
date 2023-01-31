@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option go_package = "grpc_file_storage/internal/protoschema";
 
-service Server {
+service ImageStorage {
     rpc UploadImage (stream UploadImageRequest) returns (UploadImageResponse) {};
     rpc DownloadImage (DownloadImageRequest) returns (stream DownloadImageResponse) {};
     rpc ImageInfoList (ImageInfoListRequest) returns (stream ImageInfoListResponse) {};
