@@ -15,14 +15,17 @@ import (
 
 // TODO: add configuration consumption from ENV.
 const (
-	dbPath          = "test.db"
-	fileStoragePath = "../../testdata/images"
-	grpcPort        = 8080
+	dbPath                        = "test.db"
+	fileStoragePath               = "testdata/images"
+	grpcPort                      = 8080
+	downloadUploadParallelOPLimit = 10
+	listFileInfoParallelOPLimit   = 100
 )
 
 func main() {
 	// TODO: add logging.
 	// TODO: add graceful shutdown (and correct operations cancellations).
+	// TODO: prevent more than one upload operation with the same file name at the same time.
 	ctx := context.Background()
 
 	db, err := sqlx.Open("sqlite3", dbPath)
@@ -40,7 +43,13 @@ func main() {
 		panic(fmt.Errorf("create file storage error: %w", err))
 	}
 
-	server := grpcserver.NewGRPCServer(ctx, fileInfoStorage, fileStorage)
+	server := grpcserver.NewGRPCServer(
+		ctx,
+		fileInfoStorage,
+		fileStorage,
+		downloadUploadParallelOPLimit,
+		listFileInfoParallelOPLimit,
+	)
 
 	fmt.Printf("Server is started on %d port\n", grpcPort)
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", grpcPort))

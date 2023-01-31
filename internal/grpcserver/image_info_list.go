@@ -8,6 +8,11 @@ import (
 )
 
 func (g *GRPCServer) ImageInfoList(req *protoschema.ImageInfoListRequest, resp protoschema.ImageStorage_ImageInfoListServer) error {
+	g.listFileInfoParallelOPLimit <- struct{}{}
+	defer func() {
+		<-g.listFileInfoParallelOPLimit
+	}()
+
 	fileInfoList, err := g.fileInfoStorage.ListFileInfo(g.ctx)
 	if err != nil {
 		return status.Errorf(codes.Unknown, "get file info list error: %q", err.Error())

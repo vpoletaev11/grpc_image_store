@@ -9,6 +9,11 @@ import (
 )
 
 func (g *GRPCServer) DownloadImage(req *protoschema.DownloadImageRequest, resp protoschema.ImageStorage_DownloadImageServer) error {
+	g.downloadUploadParallelOPLimit <- struct{}{}
+	defer func() {
+		<-g.downloadUploadParallelOPLimit
+	}()
+
 	fileExists, err := g.fileInfoStorage.IsFileExists(g.ctx, req.Filename)
 	if err != nil {
 		return status.Errorf(codes.Unknown, "cannot check file existing: %q", err.Error())

@@ -14,6 +14,11 @@ import (
 )
 
 func (g *GRPCServer) UploadImage(stream protoschema.ImageStorage_UploadImageServer) error {
+	g.downloadUploadParallelOPLimit <- struct{}{}
+	defer func() {
+		<-g.downloadUploadParallelOPLimit
+	}()
+
 	req, err := stream.Recv()
 	if err != nil {
 		return status.Errorf(codes.Unknown, "cannot receive image info")
