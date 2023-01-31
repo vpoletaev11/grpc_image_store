@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	datasetFolder = "testdata"
+	datasetFolder = "../../testdata"
 )
 
 var testData = []byte("test data")

@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	testDBPath = "test.db"
+	testDBPath = "../../testdata/test.db"
 )
 
 func TestFileInfoStorageSqliteIntegratedSuccess(t *testing.T) {
